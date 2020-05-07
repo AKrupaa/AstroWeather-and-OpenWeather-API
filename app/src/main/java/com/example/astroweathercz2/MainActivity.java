@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -52,8 +53,8 @@ public class MainActivity extends AppCompatActivity implements Options.IOptionsL
     private static long delayInMS;
     private boolean confirmOptionClicked = false;
     private boolean STOP_THREAD = false;
+//    ContentValues contentValues;
 
-    private Astronomy astronomy;
 
     private Thread threadTime = new Thread() {
         @Override
@@ -79,12 +80,10 @@ public class MainActivity extends AppCompatActivity implements Options.IOptionsL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setTextViews();
-
         threadTime.start();
 
         viewPager2 = findViewById(R.id.view_pager);
         viewPagerFragmentAdapter = new ViewPagerFragmentAdapter(getSupportFragmentManager(), getLifecycle());
-
         viewPagerFragmentAdapter.addFragment(Options.newInstance());
 
         // i basta.
@@ -99,17 +98,33 @@ public class MainActivity extends AppCompatActivity implements Options.IOptionsL
                 tvActualLocalization.setText(String.format("Latitude %s Longtitude %s", latitude, longtitude));
             }
 
-            astronomy = (Astronomy) savedInstanceState.getSerializable(ARG_ASTRONOMY);
+//            astronomy = (Astronomy) savedInstanceState.getSerializable(ARG_ASTRONOMY);
             if (isTablet(getApplicationContext()) && confirmOptionClicked) {
                 viewPagerFragmentAdapter.addFragment(Result.newInstance(longtitude, latitude));
             }
             if (!isTablet(getApplicationContext()) && confirmOptionClicked) {
-                viewPagerFragmentAdapter.addFragment(Moon.newInstance(longtitude, latitude));
-                viewPagerFragmentAdapter.addFragment(Sun.newInstance(longtitude, latitude));
+                viewPagerFragmentAdapter.addFragment(Moon.newInstance());
+                viewPagerFragmentAdapter.addFragment(Sun.newInstance());
             }
         }
 
         viewPager2.setAdapter(viewPagerFragmentAdapter);
+
+        JSONRequest jsonRequest = new JSONRequest(this);
+
+        jsonRequest.jsonParse("London", new JSONRequest.VolleyRequestCallback() {
+            @Override
+            public void onSuccessResponse(ContentValues contentValuesResult) {
+                Log.e("blad?" , contentValuesResult.getAsString(DatabaseHelper.NAME));
+            }
+        });
+
+//        contentValues = jsonRequest.getContentValues();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
     @Override
@@ -128,41 +143,55 @@ public class MainActivity extends AppCompatActivity implements Options.IOptionsL
     }
 
     @Override
-    public void onConfirmOptions(String sLongitude, String sLatitude, String delayTime) {
-        astronomy = calculateNewInformationsForSunAndMoon(Double.valueOf(sLongitude), Double.valueOf(sLatitude));
+    public void onConfirmOptions(String sLongitude, String sLatitude, String delayTime, String nameOfCity) {
+
         delayInMS = Long.parseLong(delayTime.replaceAll(" ", "")) * 1000 * 60;
-        longtitude = Double.valueOf(sLongitude);
-        latitude = Double.valueOf(sLatitude);
 
-        // ustaw długość i szerokośc geograficzną
-        tvActualLocalization.setText(String.format("Latitude %s Longtitude %s", latitude, longtitude));
+        if(nameOfCity!=null)
+            tvActualLocalization.setText(nameOfCity);
 
-        if(!confirmOptionClicked) {
-            if (isTablet(getApplicationContext())) {
-                // dodaj tylko fragment result
-                viewPagerFragmentAdapter.addFragment(Result.newInstance(longtitude, latitude));
-                viewPagerFragmentAdapter.notifyDataSetChanged();
-            } else {
-                // dodaj fragment moon i sun
-                viewPagerFragmentAdapter.addFragment(Moon.newInstance(longtitude, latitude));
-                viewPagerFragmentAdapter.addFragment(Sun.newInstance(longtitude, latitude));
-                viewPagerFragmentAdapter.notifyDataSetChanged();
-            }
-        } else {
-            if (isTablet(getApplicationContext())) {
-                // podmien result fragment
-                viewPagerFragmentAdapter.replaceFragment(Result.newInstance(longtitude, latitude), 1);
-                viewPagerFragmentAdapter.notifyDataSetChanged();
-            } else {
-                // podmien moon i sun fragment
-                viewPagerFragmentAdapter.replaceFragment(Moon.newInstance(longtitude, latitude), 1);
-                viewPagerFragmentAdapter.replaceFragment(Sun.newInstance(longtitude, latitude), 2);
-                viewPagerFragmentAdapter.notifyDataSetChanged();
-            }
+        if(sLongitude != null && sLatitude != null) {
+            longtitude = Double.valueOf(sLongitude);
+            latitude = Double.valueOf(sLatitude);
+            // ustaw długość i szerokośc geograficzną
+            tvActualLocalization.setText(String.format("Latitude %s Longtitude %s", latitude, longtitude));
         }
 
-        confirmOptionClicked = true;
-    }
+        //TODO: tutaj weryfikacja danych - są w bazie? nie ma w bazie?
+        // jak nie ma -> pobierz z neta
+        // jak są ale stare -> pobierz z neta
+        // jak są aktualne -> pobierz z BAZY!
+
+
+//
+
+//
+//        if(!confirmOptionClicked) {
+//            if (isTablet(getApplicationContext())) {
+//                // dodaj tylko fragment result
+//                viewPagerFragmentAdapter.addFragment(Result.newInstance(longtitude, latitude));
+//                viewPagerFragmentAdapter.notifyDataSetChanged();
+//            } else {
+//                // dodaj fragment moon i sun
+//                viewPagerFragmentAdapter.addFragment(Moon.newInstance(longtitude, latitude));
+//                viewPagerFragmentAdapter.addFragment(Sun.newInstance(longtitude, latitude));
+//                viewPagerFragmentAdapter.notifyDataSetChanged();
+//            }
+//        } else {
+//            if (isTablet(getApplicationContext())) {
+//                // podmien result fragment
+//                viewPagerFragmentAdapter.replaceFragment(Result.newInstance(longtitude, latitude), 1);
+//                viewPagerFragmentAdapter.notifyDataSetChanged();
+//            } else {
+//                // podmien moon i sun fragment
+//                viewPagerFragmentAdapter.replaceFragment(Moon.newInstance(longtitude, latitude), 1);
+//                viewPagerFragmentAdapter.replaceFragment(Sun.newInstance(longtitude, latitude), 2);
+//                viewPagerFragmentAdapter.notifyDataSetChanged();
+//            }
+        }
+
+//        confirmOptionClicked = true;
+//    }
 
     private void setActualTime() {
         DateFormat df = new SimpleDateFormat("HH:mm:ss"); // Format time
@@ -181,42 +210,11 @@ public class MainActivity extends AppCompatActivity implements Options.IOptionsL
                 >= Configuration.SCREENLAYOUT_SIZE_LARGE;
     }
 
-    public Astronomy calculateNewInformationsForSunAndMoon(Double readLatitude, Double readLongtitude) {
-        astronomy = new Astronomy();
-        astronomy.setAstroCalculator(readLatitude, readLongtitude);
-        return astronomy;
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
         STOP_THREAD = true;
     }
-
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//        final RequestManager requestManager = RequestManager.getInstance(this);
-//        final Request request = new Request(Request.Method.GET, "https://weather-ydn-yql.media.yahoo.com/forecastrss", null, new Response.Listener() {
-//            @Override
-//            public void onResponse(Object response) {
-//                /* Add success logic here */
-//                Log.e("POPRAWNE", "POPRAWNA OTRZYMANA WIADOMOSC JAKAS");
-////                Log.e("POPRAWNE", String.valueOf(response.length()));
-//                Log.e("cos","Response is: " + response.toString());
-//
-//
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                // Add error handling here
-//                Log.e("NIEPOPRAWNA", "NIEPOPRAWNE COS");
-//                Log.e("NIEPOPRAWNE", error.getMessage());
-//            }
-//        });
-//        requestManager.addToRequestQueue(request);
-//    }
 
     // getters / setters
 

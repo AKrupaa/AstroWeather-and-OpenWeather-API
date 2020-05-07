@@ -76,11 +76,11 @@ public class Result extends Fragment {
 //        Moon fragA  = new Moon();
 //        Sun fragB = Sun.newInstance();
 
-        childFragTrans.add(R.id.fragment1_container, Moon.newInstance(longtitude, latitude));
+//        childFragTrans.add(R.id.fragment1_container, Moon.newInstance(longtitude, latitude));
 //        childFragTrans.replace(R.id.fragment1_container, fragB);
-        childFragTrans.addToBackStack("A");
-        childFragTrans.add(R.id.fragment2_container, Sun.newInstance(longtitude, latitude));
-        childFragTrans.addToBackStack("B");
-        childFragTrans.commit();
+//        childFragTrans.addToBackStack("A");
+//        childFragTrans.add(R.id.fragment2_container, Sun.newInstance(longtitude, latitude));
+//        childFragTrans.addToBackStack("B");
+//        childFragTrans.commit();
     }
 }

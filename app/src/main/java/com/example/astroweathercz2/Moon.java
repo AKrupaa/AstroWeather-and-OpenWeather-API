@@ -34,7 +34,7 @@ public class Moon extends Fragment {
 
     private TextView tvMoonRise, tvMoonSet, tvNewMoon, tvFullMoon, tvPhaseOfTheMoon, tvSynodicMonthDay;
 
-    private Astronomy astronomy;
+//    private Astronomy astronomy;
     private boolean STOP_THREAD = false;
     static int i = 0;
 
@@ -42,12 +42,12 @@ public class Moon extends Fragment {
         // Required empty public constructor
     }
 
-    public static Moon newInstance(Double longitude, Double latitude) {
+    public static Moon newInstance() {
         Moon fragment = new Moon();
 
         Bundle args = new Bundle();
-        args.putDouble(ARG_LONGITUDE, longitude);
-        args.putDouble(ARG_LATITUDE, latitude);
+//        args.putDouble(ARG_LONGITUDE, longitude);
+//        args.putDouble(ARG_LATITUDE, latitude);
         fragment.setArguments(args);
 
         return fragment;
@@ -57,12 +57,8 @@ public class Moon extends Fragment {
         @Override
         public void run() {
             while(!STOP_THREAD) {
-//                Log.e("TROLL1", "I'm inside runnable!");
-                updateTextViewsInMoon();
                 try {
-//                    Log.e("The time", String.valueOf(MainActivity.getDelayInMS()));
                     Thread.sleep(MainActivity.getDelayInMS());
-//                    Thread.sleep(100);
                 } catch (InterruptedException e) {
                     Log.e("MOON THREAD TROLL", e.getMessage());
                 }
@@ -73,15 +69,10 @@ public class Moon extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-//            astronomy = (Astronomy) getArguments().getSerializable(ARG_ASTRONOMY);
-            astronomy = new Astronomy();
-            Double latitude = getArguments().getDouble(ARG_LATITUDE);
-            Double longtitude = getArguments().getDouble(ARG_LONGITUDE);
-
-            // policz z miejsca głupoty
-            astronomy.setAstroCalculator(latitude, longtitude);
-        }
+//        if (getArguments() != null) {
+//            Double latitude = getArguments().getDouble(ARG_LATITUDE);
+//            Double longtitude = getArguments().getDouble(ARG_LONGITUDE);
+//        }
     }
 
     @Override
@@ -106,7 +97,6 @@ public class Moon extends Fragment {
 
         // wyliczone głupoty w onCreate();
         // wyświetl głupoty
-        updateTextViewsInMoon();
         thread.start();
     }
 
@@ -114,19 +104,6 @@ public class Moon extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         STOP_THREAD = true;
-    }
-
-    private void updateTextViewsInMoon() {
-        ArrayList<String> moonStringsToTextViews;
-        moonStringsToTextViews = astronomy.getMoonInfo();
-
-        // zapisane w Array wartosci TextView (gotowe)
-        setMoonRiseText(moonStringsToTextViews.remove(0));
-        setMoonSetText(moonStringsToTextViews.remove(0));
-        setNewMoonText(moonStringsToTextViews.remove(0));
-        setFullMoonText(moonStringsToTextViews.remove(0));
-        setPhaseOfTheMoonText(moonStringsToTextViews.remove(0));
-        setSynodicMonthDayText(moonStringsToTextViews.remove(0));
     }
 
 //    SETTERS

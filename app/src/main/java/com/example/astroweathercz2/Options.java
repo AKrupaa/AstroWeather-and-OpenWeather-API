@@ -19,16 +19,11 @@ import java.util.List;
 
 public class Options extends Fragment {
 
-    public interface IOptionsListener {
-        void onConfirmOptions(String sLongitude, String sLatitude, String delayTime);
-    }
-
     private IOptionsListener listener;
     private EditText inputedLongitude;
     private EditText inputedLatitude;
-    //    private EditText delayTimeInMin;
+    private EditText inputedCity;
     private Spinner spinner;
-
 
     public Options() {
         // Required empty public constructor
@@ -51,12 +46,11 @@ public class Options extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_options, container, false);
 
-        // nie confirmButton = findViewById(...); tylko: ...
         Button confirmButton = v.findViewById(R.id.buttonConfirm);
         inputedLongitude = v.findViewById(R.id.inputedLongitude);
         inputedLatitude = v.findViewById(R.id.inputedLatitude);
-//        delayTimeInMin = v.findViewById(R.id.inputedTime);
         spinner = v.findViewById(R.id.spinnerTime);
+        inputedCity = v.findViewById(R.id.nameOfCity);
         addItemsToTimeSpinner();
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
@@ -65,12 +59,15 @@ public class Options extends Fragment {
                 String readLong = inputedLongitude.getText().toString();
                 String readLati = inputedLatitude.getText().toString();
                 String readTime = String.valueOf(spinner.getSelectedItem()).substring(0, 2);
+                String nameOfCity = inputedCity.getText().toString();
 
-                if (readLong.length() < 1 || readLati.length() < 1 | readTime.length() < 1) {
+                if (nameOfCity.length() > 1) {
+                    listener.onConfirmOptions(null, null, readTime, nameOfCity);
+                } else if (readLong.length() > 0 && readLati.length() > 0)
+                    listener.onConfirmOptions(readLong, readLati, readTime, null);
+                else
                     Toast.makeText(getContext(), "Wypełnij dane albo nic z tego!", Toast.LENGTH_SHORT).show();
-                } else {
-                    listener.onConfirmOptions(readLong, readLati, readTime);
-                }
+//                }
             }
         });
 
@@ -94,7 +91,6 @@ public class Options extends Fragment {
         listener = null;
     }
 
-
     private void addItemsToTimeSpinner() {
         List<String> timeDelayList = new ArrayList<String>();
         timeDelayList.add("1 minuta");
@@ -108,6 +104,10 @@ public class Options extends Fragment {
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 //        Apply the adapter to the spinner
         spinner.setAdapter(dataAdapter);
+    }
+
+    public interface IOptionsListener {
+        void onConfirmOptions(String sLongitude, String sLatitude, String delayTime, String nameOfCity);
     }
 
 }

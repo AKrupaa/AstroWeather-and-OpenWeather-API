@@ -35,19 +35,17 @@ public class Sun extends Fragment {
     private TextView tvSunRise, tvSunRiseAzimuth, tvSunSet, tvSunSetAzimuth, tvSunTwilight, tvSunCivilDawn;
 
     private static long delay;
-    private Astronomy astronomy;
     private boolean STOP_THREAD = false;
 
     public Sun() {
         // Required empty public constructor
     }
 
-    public static Sun newInstance(Double longitude, Double latitude) {
+    public static Sun newInstance() {
         Sun fragment = new Sun();
 
         Bundle args = new Bundle();
-        args.putDouble(ARG_LONGITUDE, longitude);
-        args.putDouble(ARG_LATITUDE,latitude);
+//        args.putDouble(ARG_LONGITUDE, longitude);
         fragment.setArguments(args);
 
         return fragment;
@@ -57,12 +55,8 @@ public class Sun extends Fragment {
         @Override
         public void run() {
             while(!STOP_THREAD) {
-//                Log.e("TROLL2", "I'm inside runnable!");
-                updateTextViewsInSun();
                 try {
-//                    Log.e("The time", String.valueOf(MainActivity.getDelayInMS()));
                     Thread.sleep(MainActivity.getDelayInMS());
-//                    Thread.sleep(200);
                 } catch (InterruptedException e) {
                     Log.e("SUN THREAD TROLL", e.getMessage());
                 }
@@ -74,12 +68,6 @@ public class Sun extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            astronomy = new Astronomy();
-            Double latitude = getArguments().getDouble(ARG_LATITUDE);
-            Double longtitude = getArguments().getDouble(ARG_LONGITUDE);
-
-            // policz z miejsca głupoty
-            astronomy.setAstroCalculator(latitude, longtitude);
         }
     }
 
@@ -103,7 +91,6 @@ public class Sun extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_sun, container, false);
-        setTextViews(v);
 
         return v;
     }
@@ -112,7 +99,6 @@ public class Sun extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        updateTextViewsInSun();
         thread.start();
     }
 
@@ -120,28 +106,6 @@ public class Sun extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         STOP_THREAD = true;
-    }
-
-    public void updateTextViewsInSun() {
-        ArrayList<String> sunStringsToTextViews;
-        sunStringsToTextViews = astronomy.getSunInfo();
-
-        // zapisane w Array wartosci TextView (gotowe)
-        setSunRiseText(sunStringsToTextViews.remove(0));
-        setSunRiseAzimuthText(sunStringsToTextViews.remove(0));
-        setSunSetText(sunStringsToTextViews.remove(0));
-        setSunSetAzimuthText(sunStringsToTextViews.remove(0));
-        setSunTwilightText(sunStringsToTextViews.remove(0));
-        setSunCivilDawnText(sunStringsToTextViews.remove(0));
-    }
-
-    private void setTextViews(View v) {
-        tvSunRise = v.findViewById(R.id.sunRise);
-        tvSunRiseAzimuth = v.findViewById(R.id.sunRiseAzimuth);
-        tvSunSet = v.findViewById(R.id.sunSet);
-        tvSunSetAzimuth = v.findViewById(R.id.sunSetAzimuth);
-        tvSunTwilight = v.findViewById(R.id.sunTwilight);
-        tvSunCivilDawn = v.findViewById(R.id.sunCivilDawn);
     }
 
 //    SETTERS

@@ -9,11 +9,50 @@
     >
 
 
-    <!-- TODO: Update blank fragment layout -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
+
+        <TextView
+            android:id="@+id/textViewName"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="center"
+
+            android:maxLines="1"
+            android:text="@string/nameOfCity"
+
+            android:textColor="@color/colorWhite"
+            app:autoSizeMaxTextSize="@dimen/autoSizeMaxTextSize"
+            app:autoSizeMinTextSize="@dimen/autoSizeMinTextSize"
+            app:autoSizeStepGranularity="@dimen/autoSizeStepGranularity"
+            app:autoSizeTextType="uniform"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.10" />
+
+
+        <EditText
+            android:id="@+id/nameOfCity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:hint="@string/hintCity"
+            android:inputType="text"
+            android:textColor="@color/colorOrange"
+            android:textColorHint="@color/colorOrange"
+
+            app:autoSizeMaxTextSize="@dimen/autoSizeMaxTextSize"
+            app:autoSizeMinTextSize="@dimen/autoSizeMinTextSize"
+            app:autoSizeStepGranularity="@dimen/autoSizeStepGranularity"
+            app:autoSizeTextType="uniform"
+
+            app:layout_constraintTop_toBottomOf="@id/textViewName"
+            />
 
         <TextView
             android:id="@+id/textView"
@@ -34,8 +73,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.04000002" />
+            app:layout_constraintTop_toBottomOf="@id/nameOfCity"
+            app:layout_constraintVertical_bias="0.0" />
 
         <TextView
             android:id="@+id/textView3"
