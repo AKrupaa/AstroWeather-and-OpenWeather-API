@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#6200EE</color>
+    <color name="colorPrimaryDark">#3700B3</color>
+    <color name="colorAccent">#03DAC5</color>
+    <color name="colorEquals">#FF5722</color>
+    <color name="colorTextEquals">#FFF</color>
+    <color name="colorFunctionality">#FF5722</color>
+    <color name="colorWhite">#FFF</color>
+    <color name="colorExitFaded">#c4aead</color>
+    <color name="colorFunctionalityFaded">#FF794F</color>
+    <color name="colorHint">#ff1e56</color>
+    <color name="colorBlack">#000</color>
+    <color name="colorGrey">#323232</color>
+    <color name="colorRed">#ff1e56</color>
+    <color name="colorOrange">#ffac41</color>
+</resources>

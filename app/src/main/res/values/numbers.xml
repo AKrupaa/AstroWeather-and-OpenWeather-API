@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="one">1</dimen>
+
+    <dimen name="MinTextSize">12sp</dimen>
+    <dimen name="MaxTextSize">500sp</dimen>
+
+    <dimen name="sixtyFourDp">64dp</dimen>
+    <dimen name="sixtyDp">60dp</dimen>
+    <dimen name="buttonsHeight">40dp</dimen>
+    <dimen name="buttonsHeightLarge">75dp</dimen>
+
+    <dimen name="autoSizeMinTextSize">5sp</dimen>
+    <dimen name="autoSizeMaxTextSize">100sp</dimen>
+    <dimen name="autoSizeStepGranularity">2sp</dimen>
+
+    <dimen name="autoSizeMinTextSizeWelcome">10sp</dimen>
+    <dimen name="autoSizeMaxTextSizeWelcome">40sp</dimen>
+    <dimen name="autoSizeStepGranularityWelcome">2sp</dimen>
+
+    <dimen name="autoSizeMinTextSizeSimple">10sp</dimen>
+    <dimen name="autoSizeMaxTextSizeSimple">40sp</dimen>
+    <dimen name="autoSizeStepGranularitySimple">2sp</dimen>
+
+    <dimen name="buttonsHeightLargeSimpleCal">100dp</dimen>
+</resources>

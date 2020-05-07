@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:weightSum="2"
+    >
+
+    <TextView
+        android:id="@+id/textViewActualTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_weight="1"
+        android:gravity="right"
+        android:layout_gravity="center"
+        android:background="@color/colorBlack"
+
+        android:maxLines="1"
+        android:text=""
+        android:textColor="@color/colorWhite"
+        app:autoSizeMaxTextSize="@dimen/autoSizeMaxTextSize"
+
+        app:autoSizeMinTextSize="@dimen/autoSizeMinTextSize"
+        app:autoSizeStepGranularity="@dimen/autoSizeStepGranularity"
+        app:autoSizeTextType="uniform" />
+
+    <TextView
+        android:id="@+id/textViewActualLocalization"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_weight="1"
+        android:layout_gravity="left"
+        android:background="@color/colorBlack"
+
+        android:maxLines="1"
+        android:text=""
+        android:textColor="@color/colorWhite"
+        app:autoSizeMaxTextSize="@dimen/autoSizeMaxTextSize"
+
+        app:autoSizeMinTextSize="@dimen/autoSizeMinTextSize"
+        app:autoSizeStepGranularity="@dimen/autoSizeStepGranularity"
+        app:autoSizeTextType="uniform" />
+
+
+
+</LinearLayout>

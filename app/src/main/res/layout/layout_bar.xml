@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:weightSum="3">
+
+    <Button
+        android:id="@+id/button_options"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@color/colorBlack"
+        android:text="@string/options"
+        android:textColor="@color/colorWhite" />
+
+    <Button
+        android:id="@+id/button_sun"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@color/colorBlack"
+        android:text="@string/sun"
+        android:textColor="@color/colorWhite" />
+
+    <Button
+        android:id="@+id/button_moon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@color/colorBlack"
+        android:text="@string/moon"
+        android:textColor="@color/colorWhite" />
+
+</LinearLayout>

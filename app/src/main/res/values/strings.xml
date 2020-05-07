@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">AstroWeather</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="options">OPCJE</string>
+    <string name="sun">Słońce</string>
+    <string name="moon">Księżyc</string>
+    <string name="astroWeatherText">AstroWeather\nv1.0</string>
+    <string name="firstSteps">Rozpocznij od opcji by skonfigurować swoje środowisko!</string>
+
+    <string name="longitude">Długość geograficzna</string>
+    <string name="latitude">Szerokość geograficzna</string>
+    <string name="hintlongitude">dlugosc geograficzna</string>
+    <string name="hintLatitude">szerokosc geograficzna</string>
+    <string name="confirm">Zatwierdź</string>
+
+    <string name="timeBetweenCalculations">Czas pomiędzy obliczeniami</string>
+    <string name="hinttimeBetweenCalculations">wprowadz minuty</string>
+
+    <string name="moonRise">moonRise: czas</string>
+    <string name="moonSet">moonSet: czas</string>
+    <string name="nearestNewMoon">NearestNewMoon: data</string>
+    <string name="nearestFullMoon">NearestFullMoon: data</string>
+    <string name="phaseOfTheMoon">PhaseOfTheMoon: procent</string>
+    <string name="synodicMonthDay">SynodicMonthDay: day</string>
+
+    <string name="sunRise">SunRise: czas</string>
+    <string name="sunRiseAzimuth">sunRiseAzimuth: azymut</string>
+    <string name="sunSet">SunSet: czas</string>
+    <string name="sunSetAzimuth">sunSetAzimuth: azymut</string>
+    <string name="sunTwilight">sunTwilight: czas</string>
+    <string name="sunCivilDawn">sunCivilDawn: czas</string>
+
+</resources>
