@@ -42,4 +42,9 @@ dependencies {
 
     // https://mvnrepository.com/artifact/net.oauth.core/oauth
     compile group: 'net.oauth.core', name: 'oauth', version: '20100527'
+
+    def lifecycle_version = "2.2.0"
+
+    // ViewModel
+    implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle_version"
 }

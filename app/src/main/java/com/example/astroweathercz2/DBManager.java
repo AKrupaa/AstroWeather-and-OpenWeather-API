@@ -40,7 +40,7 @@ public class DBManager {
         This can happen if you have a conflict with pre-existing data in the database.
      */
     public long insert(String name, /*String dateInsert,*/ int lon, int lat, int temp, int feelsLike,
-                       int tempMin, int tempMax, int pressure, int humidity, int speed, int deg, int sunrise, int sunset, int timezone) {
+                       int tempMin, int tempMax, int pressure, int humidity, int speed, /*int deg,*/ int sunrise, int sunset, int timezone) {
 //        Content Values creates an empty set of values using the given initial size
 //        This class is used to store a set of values
 
@@ -59,7 +59,7 @@ public class DBManager {
         contentValues.put(DatabaseHelper.PRESSURE, pressure);
         contentValues.put(DatabaseHelper.HUMIDITY, humidity);
         contentValues.put(DatabaseHelper.SPEED, speed);
-        contentValues.put(DatabaseHelper.DEG, deg);
+//        contentValues.put(DatabaseHelper.DEG, deg);
         contentValues.put(DatabaseHelper.SUNRISE, sunrise);
         contentValues.put(DatabaseHelper.SUNSET, sunset);
         contentValues.put(DatabaseHelper.TIMEZONE, timezone);
@@ -92,7 +92,7 @@ public class DBManager {
                 DatabaseHelper.PRESSURE,
                 DatabaseHelper.HUMIDITY,
                 DatabaseHelper.SPEED,
-                DatabaseHelper.DEG,
+//                DatabaseHelper.DEG,
                 DatabaseHelper.SUNRISE,
                 DatabaseHelper.SUNSET,
                 DatabaseHelper.TIMEZONE
@@ -152,7 +152,7 @@ public class DBManager {
 
     //    Updating Record in Android SQLite database table
     public int update(long _id, String name, /*String dateInsert,*/ int lon, int lat, int temp, int feelsLike,
-                      int tempMin, int tempMax, int pressure, int humidity, int speed, int deg, int sunrise, int sunset, int timezone) {
+                      int tempMin, int tempMax, int pressure, int humidity, int speed, /*int deg,*/ int sunrise, int sunset, int timezone) {
 //        Content Values creates an empty set of values using the given initial size
 //        This class is used to store a set of values
         ContentValues contentValues = new ContentValues();
@@ -171,7 +171,7 @@ public class DBManager {
         contentValues.put(DatabaseHelper.PRESSURE, pressure);
         contentValues.put(DatabaseHelper.HUMIDITY, humidity);
         contentValues.put(DatabaseHelper.SPEED, speed);
-        contentValues.put(DatabaseHelper.DEG, deg);
+//        contentValues.put(DatabaseHelper.DEG, deg);
         contentValues.put(DatabaseHelper.SUNRISE, sunrise);
         contentValues.put(DatabaseHelper.SUNSET, sunset);
         contentValues.put(DatabaseHelper.TIMEZONE, timezone);
@@ -179,4 +179,12 @@ public class DBManager {
         int i = database.update(DatabaseHelper.TABLE_NAME, contentValues, DatabaseHelper._ID + " = " + _id, null);
         return i;
     }
+
+    public int update(long _id, ContentValues contentValues) {
+        contentValues.put(DatabaseHelper._ID, _id);
+        int i = database.update(DatabaseHelper.TABLE_NAME, contentValues, DatabaseHelper._ID + " = " + _id, null);
+        return i;
+    }
+
+
 }

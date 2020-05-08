@@ -1,6 +1,5 @@
 package com.example.astroweathercz2;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 
@@ -17,20 +16,20 @@ import java.util.Date;
 //5. podmiec baze danych
 
 public class AstroWeatherCompare {
-    private DBManager dbManager;
+//    private DBManager dbManager;
 
-    public AstroWeatherCompare(Context context) {
-        dbManager = new DBManager(context);
+    public AstroWeatherCompare(/*Context context*/) {
+//        dbManager = new DBManager(context);
     }
 
-    boolean doINeedToFetchFromInternet(String name) {
-        Cursor cursor;
-        cursor = dbManager.fetchIDNameDate();
+    boolean doINeedToFetchFromInternet(String name, Cursor cur) {
+        Cursor cursor = cur;
+//        cursor = dbManager.fetchIDNameDate();
 
         for (; !cursor.isAfterLast(); cursor.moveToNext()) {
             // jezeli masz to miasto ...
             // jezeli miasto w bazie danych == miasto ktore szuka uzytkownik
-            if(cursor.getString(cursor.getColumnIndex(DatabaseHelper.NAME)).equals(name)) {
+            if (cursor.getString(cursor.getColumnIndex(DatabaseHelper.NAME)).equals(name)) {
 
                 // to zgarnij date wpisu dla tego wlasnie miasta
                 String fetchedDate = cursor.getString(cursor.getColumnIndex(DatabaseHelper.DATE_OF_INSERT));
@@ -49,8 +48,8 @@ public class AstroWeatherCompare {
                     long timeDifferenceMilliseconds = Math.abs(timeFromDB - timeNow);
 
                     // jezeli dane nie są stare tj. minelo mniej niz 30 minut od ostatniego sprawdzenia to...
-                    if(timeDifferenceMilliseconds < 1000* 60 * 30)
-                        dbManager.close();
+                    if (timeDifferenceMilliseconds < 1000 * 60 * 30)
+//                        dbManager.close();
                         // GET FROM DATABASE
                         return false;
 
@@ -60,10 +59,21 @@ public class AstroWeatherCompare {
             }
         }
 
-        dbManager.close();
+//        dbManager.close();
         // FETCH FROM INTERNET
         return true;
     }
 
 
+    public long IDOfCityName(String name, Cursor cursor) throws Exception {
+        for (; !cursor.isAfterLast(); cursor.moveToNext()) {
+            if (cursor.getString(cursor.getColumnIndex(DatabaseHelper.NAME)).equals(name)) {
+                // ID
+                long ID = cursor.getLong(cursor.getColumnIndex(DatabaseHelper._ID));
+                return ID;
+            }
+        }
+
+        throw new Exception("There is not any city " + name + " in database");
+    }
 }

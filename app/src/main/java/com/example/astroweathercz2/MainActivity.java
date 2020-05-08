@@ -1,27 +1,20 @@
 package com.example.astroweathercz2;
 
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.res.Configuration;
+import android.database.Cursor;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
-import android.content.ContentValues;
-import android.content.Context;
-import android.content.res.Configuration;
-import android.os.Bundle;
-import android.os.Parcelable;
-import android.util.Log;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.android.volley.NetworkResponse;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
@@ -42,18 +35,17 @@ public class MainActivity extends AppCompatActivity implements Options.IOptionsL
     private static final String ARG_LATITUDE = "ARG_LATITUDE";
 
     private static final String[] TAB = {"Options", "Moon", "Sun", "Result"};
-
+    private static long delayInMS;
     private ViewPagerFragmentAdapter viewPagerFragmentAdapter;
     private ViewPager2 viewPager2;
     private TextView tvActualTime;
     private TextView tvActualLocalization;
-
+    private ProgressBar progressBar;
     private Double longtitude;
     private Double latitude;
-    private static long delayInMS;
     private boolean confirmOptionClicked = false;
     private boolean STOP_THREAD = false;
-//    ContentValues contentValues;
+//    private JSONObject jsonResponse;
 
 
     private Thread threadTime = new Thread() {
@@ -75,11 +67,17 @@ public class MainActivity extends AppCompatActivity implements Options.IOptionsL
         }
     };
 
+    static public long getDelayInMS() {
+        return delayInMS;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setTextViews();
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+
         threadTime.start();
 
         viewPager2 = findViewById(R.id.view_pager);
@@ -91,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements Options.IOptionsL
             confirmOptionClicked = savedInstanceState.getBoolean(ARG_CONFIRM_OPTION_CLICKED);
             delayInMS = savedInstanceState.getLong(ARG_DELAY_IN_MS);
 
-            if(confirmOptionClicked) {
+            if (confirmOptionClicked) {
                 latitude = savedInstanceState.getDouble(ARG_LATITUDE);
                 longtitude = savedInstanceState.getDouble(ARG_LONGTITUDE);
                 // ustaw szerokosc i dlugosc geo.
@@ -109,17 +107,6 @@ public class MainActivity extends AppCompatActivity implements Options.IOptionsL
         }
 
         viewPager2.setAdapter(viewPagerFragmentAdapter);
-
-        JSONRequest jsonRequest = new JSONRequest(this);
-
-        jsonRequest.jsonParse("London", new JSONRequest.VolleyRequestCallback() {
-            @Override
-            public void onSuccessResponse(ContentValues contentValuesResult) {
-                Log.e("blad?" , contentValuesResult.getAsString(DatabaseHelper.NAME));
-            }
-        });
-
-//        contentValues = jsonRequest.getContentValues();
     }
 
     @Override
@@ -143,55 +130,95 @@ public class MainActivity extends AppCompatActivity implements Options.IOptionsL
     }
 
     @Override
-    public void onConfirmOptions(String sLongitude, String sLatitude, String delayTime, String nameOfCity) {
+    public void onConfirmOptions(String sLongitude, String sLatitude, String delayTime, final String nameOfCity) {
 
         delayInMS = Long.parseLong(delayTime.replaceAll(" ", "")) * 1000 * 60;
 
-        if(nameOfCity!=null)
+        if (nameOfCity != null)
             tvActualLocalization.setText(nameOfCity);
 
-        if(sLongitude != null && sLatitude != null) {
+        if (sLongitude != null && sLatitude != null) {
             longtitude = Double.valueOf(sLongitude);
             latitude = Double.valueOf(sLatitude);
             // ustaw długość i szerokośc geograficzną
             tvActualLocalization.setText(String.format("Latitude %s Longtitude %s", latitude, longtitude));
         }
 
-        //TODO: tutaj weryfikacja danych - są w bazie? nie ma w bazie?
-        // jak nie ma -> pobierz z neta
-        // jak są ale stare -> pobierz z neta
-        // jak są aktualne -> pobierz z BAZY!
+        // blokuje ekran wczytywania
+        viewPager2.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
 
+        // otworz baze danych
+        final DBManager dbManager = new DBManager(this);
+        dbManager.open();
 
-//
+        // sprawdz czy istnieje name w bazie danych
+        final AstroWeatherCompare astroWeatherCompare = new AstroWeatherCompare();
+        // pobierz z bazy danych potrzebne rekordy!
+        final Cursor cursor = dbManager.fetchIDNameDate();
+//        Sprawdz czy istnieje "name"
+//        Jezeli istnieje, porownaj czas ostatniej akt.
+//        Jezeli >30 min: zwroc true
+//        if false == get from database
+//        if true == fetch from Internet
+        boolean fetchFromInternet = astroWeatherCompare.doINeedToFetchFromInternet(nameOfCity, cursor);
 
-//
-//        if(!confirmOptionClicked) {
-//            if (isTablet(getApplicationContext())) {
-//                // dodaj tylko fragment result
-//                viewPagerFragmentAdapter.addFragment(Result.newInstance(longtitude, latitude));
-//                viewPagerFragmentAdapter.notifyDataSetChanged();
-//            } else {
-//                // dodaj fragment moon i sun
-//                viewPagerFragmentAdapter.addFragment(Moon.newInstance(longtitude, latitude));
-//                viewPagerFragmentAdapter.addFragment(Sun.newInstance(longtitude, latitude));
-//                viewPagerFragmentAdapter.notifyDataSetChanged();
-//            }
-//        } else {
-//            if (isTablet(getApplicationContext())) {
-//                // podmien result fragment
-//                viewPagerFragmentAdapter.replaceFragment(Result.newInstance(longtitude, latitude), 1);
-//                viewPagerFragmentAdapter.notifyDataSetChanged();
-//            } else {
-//                // podmien moon i sun fragment
-//                viewPagerFragmentAdapter.replaceFragment(Moon.newInstance(longtitude, latitude), 1);
-//                viewPagerFragmentAdapter.replaceFragment(Sun.newInstance(longtitude, latitude), 2);
-//                viewPagerFragmentAdapter.notifyDataSetChanged();
-//            }
+        if (fetchFromInternet) {
+            // pobieraj z Internetu!
+            final JSONRequest jsonRequest = new JSONRequest(this);
+            jsonRequest.getResponse(nameOfCity, new JSONRequest.VolleyRequestCallback() {
+                @Override
+                public void onSuccessResponse(JSONObject response) {
+
+                    // powiodło się pobranie z interentu
+                    Toast.makeText(getApplicationContext(), "Woah, masz szybkie łączę internetowe!", Toast.LENGTH_SHORT).show();
+
+                    // wez to teraz przetlumacz na dane, na których będziesz pracować
+                    jsonRequest.jsonParse(response, new JSONRequest.VolleyParseCallback() {
+                        @Override
+                        public void on404Result(String errorMessage) {
+                            // coś gościu źle wprowadził
+                            // wypisz mu blad
+                            Log.e("ERROR 404 HTML", errorMessage);
+                            Log.e("ERROR 404 HTML", "Wrong data in EditTexts, try again");
+                            Toast.makeText(getApplicationContext(), "There is not city like those, try again", Toast.LENGTH_LONG).show();
+                        }
+
+                        @Override
+                        public void onSuccessResult(ContentValues result) {
+                            // znalazłeś miasto, masz dane i w ogóle jesteś szczęśliwy :-)
+                            // data was found in WEB, you are happy now -)
+                            Toast.makeText(getApplicationContext(), "OUuuu YEAH", Toast.LENGTH_LONG).show();
+
+                            // sprawdz czy w bazie istnieje takie cudo
+                            try {
+                                // istnieje -> akutalizacja
+                                long ID = astroWeatherCompare.IDOfCityName(nameOfCity, cursor);
+                                int affected = dbManager.update(ID, result);
+                                Log.e("SUCCES: ", "Zaaktualizowano " + affected + " wierszy w bazie danych!");
+                                // wrzuc do Containera
+                                //TODO: wrzucic dane do Container
+                            } catch (Exception e) {
+                                // nie istnieje
+                                Log.e("FOUND NO row ", e.getMessage());
+                                long rowID = dbManager.insert(result);
+                                Log.e("Inserted new row: ", "Dane dodane do bazy danych, ID " + rowID);
+
+                                //TODO: wrzuc dane do Containera
+                            }
+                            // wladuj dane do bazy danych,
+                            // wladuj dane do containera na ktorych bedziesz juz pracowac - szybszy dostep
+                        }
+                    });
+                }
+            });
         }
 
-//        confirmOptionClicked = true;
-//    }
+        // zwolniam ekran wczytywania
+        viewPager2.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.GONE);
+
+    }
 
     private void setActualTime() {
         DateFormat df = new SimpleDateFormat("HH:mm:ss"); // Format time
@@ -210,15 +237,11 @@ public class MainActivity extends AppCompatActivity implements Options.IOptionsL
                 >= Configuration.SCREENLAYOUT_SIZE_LARGE;
     }
 
+    // getters / setters
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         STOP_THREAD = true;
-    }
-
-    // getters / setters
-
-    static public long getDelayInMS() {
-        return delayInMS;
     }
 }
