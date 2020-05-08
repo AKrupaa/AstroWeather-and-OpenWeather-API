@@ -9,7 +9,6 @@ package com.example.astroweathercz2;
 import android.content.ContentValues;
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -44,17 +43,8 @@ public class JSONRequest {
         mQueue = Volley.newRequestQueue(context);
     }
 
-    public interface VolleyRequestCallback {
-        void onSuccessResponse(JSONObject response);
-    }
-
-    public interface VolleyParseCallback {
-        void on404Result(String text);
-        void onSuccessResult(ContentValues result);
-    }
-
     public void getResponse(String city, final VolleyRequestCallback volleyCallback) {
-        String url = BASE_URL + city + UNITS + "&appid=" + APP_ID;
+        String url = BASE_URL + city + UNITS + "&appid=" + APP_ID + "&lang=en";
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -63,164 +53,111 @@ public class JSONRequest {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(null, error.getMessage(), Toast.LENGTH_LONG).show();
+                volleyCallback.onErrorResponse(error);
             }
         });
         mQueue.add(request);
     }
 
-
     public void jsonParse(JSONObject response, final VolleyParseCallback parseCallback) {
-                try {
-                    // sprawdzasz czy warto
-                    if(response.getInt("cod") == 404) {
-                        parseCallback.on404Result("Error: 404 Not Found");
-                        return;
-                    }
+        try {
+            // sprawdzasz czy warto
+            if (response.getInt("cod") == 404) {
+                parseCallback.on404Result("Error: 404 Not Found");
+                return;
+            }
 
-                    // WARTO!
-                    ContentValues contentValues = new ContentValues();
+            // WARTO!
+            ContentValues contentValues = new ContentValues();
 
-                    JSONObject coord = response.getJSONObject("coord");
+            JSONObject coord = response.getJSONObject("coord");
 
-                    int lon = coord.getInt("lon");
-                    int lat = coord.getInt("lat");
+            int lon = coord.getInt("lon");
+            int lat = coord.getInt("lat");
 
-                    contentValues.put(DatabaseHelper.LON, lon);
-                    contentValues.put(DatabaseHelper.LAT, lat);
+            contentValues.put(DatabaseHelper.LON, lon);
+            contentValues.put(DatabaseHelper.LAT, lat);
 
-                    JSONObject main = response.getJSONObject("main");
-                    int temp = main.getInt("temp");
-                    int feelsLike = main.getInt("feels_like");
-                    int temp_min = main.getInt("temp_min");
-                    int temp_max = main.getInt("temp_max");
-                    int pressure = main.getInt("pressure");
-                    int humidity = main.getInt("humidity");
+            JSONObject main = response.getJSONObject("main");
+            int temp = main.getInt("temp");
+            int feelsLike = main.getInt("feels_like");
+            int temp_min = main.getInt("temp_min");
+            int temp_max = main.getInt("temp_max");
+            int pressure = main.getInt("pressure");
+            int humidity = main.getInt("humidity");
 
-                    contentValues.put(DatabaseHelper.TEMPERATURE, temp);
-                    contentValues.put(DatabaseHelper.FEELS_LIKE, feelsLike);
-                    contentValues.put(DatabaseHelper.TEMP_MIN, temp_min);
-                    contentValues.put(DatabaseHelper.TEMP_MAX, temp_max);
-                    contentValues.put(DatabaseHelper.PRESSURE, pressure);
-                    contentValues.put(DatabaseHelper.HUMIDITY, humidity);
+            contentValues.put(DatabaseHelper.TEMPERATURE, temp);
+            contentValues.put(DatabaseHelper.FEELS_LIKE, feelsLike);
+            contentValues.put(DatabaseHelper.TEMP_MIN, temp_min);
+            contentValues.put(DatabaseHelper.TEMP_MAX, temp_max);
+            contentValues.put(DatabaseHelper.PRESSURE, pressure);
+            contentValues.put(DatabaseHelper.HUMIDITY, humidity);
 
-                    JSONObject wind = response.getJSONObject("wind");
-                    int speed = wind.getInt("speed");
+            JSONObject wind = response.getJSONObject("wind");
+            int speed = wind.getInt("speed");
 
-                    // OJ TAK 08-05-2020 - ZMIANA STRUKTURY DANYCH JSONA, OJ TAK ....................
-                    // [*]
-                    // "WCZORAJ DZIALALO!"
+            // OJ TAK 08-05-2020 - ZMIANA STRUKTURY DANYCH JSONA, OJ TAK ....................
+            // [*]
+            // "WCZORAJ DZIALALO!"
 //                    int deg = wind.getInt("deg");
 
-                    contentValues.put(DatabaseHelper.SPEED, speed);
+            contentValues.put(DatabaseHelper.SPEED, speed);
 //                    contentValues.put(DatabaseHelper.DEG, deg);
 
-                    JSONObject sys = response.getJSONObject("sys");
-                    int sunrise = sys.getInt("sunrise");
-                    int sunset = sys.getInt("sunset");
+            JSONObject sys = response.getJSONObject("sys");
+            int sunrise = sys.getInt("sunrise");
+            int sunset = sys.getInt("sunset");
 
-                    contentValues.put(DatabaseHelper.SUNRISE, sunrise);
-                    contentValues.put(DatabaseHelper.SUNSET, sunset);
+            contentValues.put(DatabaseHelper.SUNRISE, sunrise);
+            contentValues.put(DatabaseHelper.SUNSET, sunset);
 
-                    int timezone = response.getInt("timezone");
+            int timezone = response.getInt("timezone");
 
-                    contentValues.put(DatabaseHelper.TIMEZONE, timezone);
+            contentValues.put(DatabaseHelper.TIMEZONE, timezone);
 
-                    String name = response.getString("name");
+            // You are asking for Lodz, yeah?
+            // Yeah
+            // Here you are: łódź
+            // Are you serious?
 
-                    contentValues.put(DatabaseHelper.NAME, name);
+            String name = response.getString("name");
+            name = name.toLowerCase();
+            String convertedString = name
+                    .replaceAll("ą", "a")
+                    .replaceAll("ę", "e")
+                    .replaceAll("ó", "o")
+                    .replaceAll("ś", "s")
+                    .replaceAll("ł", "l")
+                    .replaceAll("ż", "z")
+                    .replaceAll("ź", "z")
+                    .replaceAll("ć", "c")
+                    .replaceAll("ń", "n")
+                    .replaceAll(" ", "");
+            contentValues.put(DatabaseHelper.NAME, convertedString);
 
-                    // actual date *new element
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    String date = sdf.format(new Date());
-                    contentValues.put(DatabaseHelper.DATE_OF_INSERT, date);
+            // actual date *new element
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String date = sdf.format(new Date());
+            contentValues.put(DatabaseHelper.DATE_OF_INSERT, date);
 
-                    parseCallback.onSuccessResult(contentValues);
+            parseCallback.onSuccessResult(contentValues);
 
-                } catch (JSONException e) {
-                    Log.e("JSONRequest Exception", e.getMessage());
-                    e.printStackTrace();
-                }
+        } catch (JSONException e) {
+            Log.e("JSONRequest Exception", e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public interface VolleyRequestCallback {
+        void onSuccessResponse(JSONObject response);
+
+        void onErrorResponse(VolleyError error);
     }
 
 
+    public interface VolleyParseCallback {
+        void on404Result(String text);
 
-//    public void jsonParse(String city, final VolleyParseCallback parseCallback) {
-//        String url = BASE_URL + city + UNITS + "&appid=" + APP_ID;
-//        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-//            @Override
-//            public void onResponse(JSONObject response) {
-//                try {
-//                    if(response.getInt("cod") == 404) {
-////                        volleyRequestCallback.on404Response("Error: 404 Not Found");
-//                        return;
-//                    }
-//
-//                    ContentValues contentValues = new ContentValues();
-//
-//                    JSONObject coord = response.getJSONObject("coord");
-//
-//                    int lon = coord.getInt("lon");
-//                    int lat = coord.getInt("lat");
-//
-//                    contentValues.put(DatabaseHelper.LON, lon);
-//                    contentValues.put(DatabaseHelper.LAT, lat);
-//
-//                    JSONObject main = response.getJSONObject("main");
-//                    int temp = main.getInt("temp");
-//                    int feelsLike = main.getInt("feels_like");
-//                    int temp_min = main.getInt("temp_min");
-//                    int temp_max = main.getInt("temp_max");
-//                    int pressure = main.getInt("pressure");
-//                    int humidity = main.getInt("humidity");
-//
-//                    contentValues.put(DatabaseHelper.TEMPERATURE, temp);
-//                    contentValues.put(DatabaseHelper.FEELS_LIKE, feelsLike);
-//                    contentValues.put(DatabaseHelper.TEMP_MIN, temp_min);
-//                    contentValues.put(DatabaseHelper.TEMP_MAX, temp_max);
-//                    contentValues.put(DatabaseHelper.PRESSURE, pressure);
-//                    contentValues.put(DatabaseHelper.HUMIDITY, humidity);
-//
-//                    JSONObject wind = response.getJSONObject("wind");
-//                    int speed = wind.getInt("speed");
-//                    int deg = wind.getInt("deg");
-//
-//                    contentValues.put(DatabaseHelper.SPEED, speed);
-//                    contentValues.put(DatabaseHelper.DEG, deg);
-//
-//                    JSONObject sys = response.getJSONObject("sys");
-//                    int sunrise = sys.getInt("sunrise");
-//                    int sunset = sys.getInt("sunset");
-//
-//                    contentValues.put(DatabaseHelper.SUNRISE, sunrise);
-//                    contentValues.put(DatabaseHelper.SUNSET, sunset);
-//
-//                    int timezone = response.getInt("timezone");
-//
-//                    contentValues.put(DatabaseHelper.TIMEZONE, timezone);
-//
-//                    String name = response.getString("name");
-//
-//                    contentValues.put(DatabaseHelper.NAME, name);
-//
-//                    // actual date *new element
-//                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//                    String date = sdf.format(new Date());
-//                    contentValues.put(DatabaseHelper.DATE_OF_INSERT, date);
-//
-////                    volleyRequestCallback.onSuccessResponse(contentValues);
-//
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                Log.e("tag", error.getMessage());
-//                Toast.makeText(null, "No connection", Toast.LENGTH_LONG);
-//            }
-//        });
-//        mQueue.add(request);
-//    }
+        void onSuccessResult(ContentValues result);
+    }
 }

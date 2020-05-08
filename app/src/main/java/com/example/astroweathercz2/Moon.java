@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import java.util.ArrayList;
 
@@ -34,9 +35,7 @@ public class Moon extends Fragment {
 
     private TextView tvMoonRise, tvMoonSet, tvNewMoon, tvFullMoon, tvPhaseOfTheMoon, tvSynodicMonthDay;
 
-//    private Astronomy astronomy;
     private boolean STOP_THREAD = false;
-    static int i = 0;
 
     public Moon() {
         // Required empty public constructor
@@ -53,26 +52,9 @@ public class Moon extends Fragment {
         return fragment;
     }
 
-    private Thread thread = new Thread(new Runnable() {
-        @Override
-        public void run() {
-            while(!STOP_THREAD) {
-                try {
-                    Thread.sleep(MainActivity.getDelayInMS());
-                } catch (InterruptedException e) {
-                    Log.e("MOON THREAD TROLL", e.getMessage());
-                }
-            }
-        }
-    });
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            Double latitude = getArguments().getDouble(ARG_LATITUDE);
-//            Double longtitude = getArguments().getDouble(ARG_LONGITUDE);
-//        }
     }
 
     @Override
@@ -90,14 +72,10 @@ public class Moon extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        // jak już jest STWORZONE
-        // ale przed tym jak użytkownik końcowy widzi to na własne oczy.
-
-        // wyliczone głupoty w onCreate();
-        // wyświetl głupoty
-        thread.start();
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        SharedViewModel model = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+//        setFullMoonText(String.valueOf(model.getMyInteger()));
     }
 
     @Override

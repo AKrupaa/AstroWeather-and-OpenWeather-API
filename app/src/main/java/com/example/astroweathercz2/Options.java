@@ -62,6 +62,7 @@ public class Options extends Fragment {
                 String nameOfCity = inputedCity.getText().toString();
 
                 if (nameOfCity.length() > 1) {
+                    nameOfCity = nameOfCity.toLowerCase().replaceAll(" ", "");
                     listener.onConfirmOptions(null, null, readTime, nameOfCity);
                 } else if (readLong.length() > 0 && readLati.length() > 0)
                     listener.onConfirmOptions(readLong, readLati, readTime, null);

@@ -3,10 +3,16 @@ package com.example.astroweathercz2;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 //  https://developer.android.com/training/data-storage/sqlite
 
@@ -136,8 +142,27 @@ public class DBManager {
                 null,               // The values for the WHERE clause
                 null,                   // don't group the rows
                 null,                   // don't filter by row groups
+                DatabaseHelper.NAME + " ASC"                    // The sort order
+        );
+
+        if (cursor != null) {
+            cursor.moveToFirst();
+        }
+        return cursor;
+    }
+
+    public Cursor fetchWhereID(long id) {
+        Cursor cursor = database.query(
+                DatabaseHelper.TABLE_NAME,      // The table to query
+                null,                     // The array of columns to return (pass null to get all)
+                DatabaseHelper._ID + "=?",                   // The columns for the WHERE clause
+                new String[] { String.valueOf(id) },               // The values for the WHERE clause
+                null,                   // don't group the rows
+                null,                   // don't filter by row groups
                 null                    // The sort order
         );
+
+//        Cursor findEntry = db.query("sku_table", columns, "owner=? and price=?", new String[] { owner, price }, null, null, null);
 
         if (cursor != null) {
             cursor.moveToFirst();
@@ -186,5 +211,30 @@ public class DBManager {
         return i;
     }
 
+    public static ContentValues cursorRowToContentValues(Cursor cursor) {
+        ContentValues values = new ContentValues();
+        String[] columns = cursor.getColumnNames();
+        int length = columns.length;
+        for (int i = 0; i < length; i++) {
+            switch (cursor.getType(i)) {
+                case Cursor.FIELD_TYPE_NULL:
+                    values.putNull(columns[i]);
+                    break;
+                case Cursor.FIELD_TYPE_INTEGER:
+                    values.put(columns[i], cursor.getLong(i));
+                    break;
+                case Cursor.FIELD_TYPE_FLOAT:
+                    values.put(columns[i], cursor.getDouble(i));
+                    break;
+                case Cursor.FIELD_TYPE_STRING:
+                    values.put(columns[i], cursor.getString(i));
+                    break;
+                case Cursor.FIELD_TYPE_BLOB:
+                    values.put(columns[i], cursor.getBlob(i));
+                    break;
+            }
+        }
+        return values;
+    }
 
 }
