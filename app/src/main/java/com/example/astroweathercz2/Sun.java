@@ -43,47 +43,13 @@ public class Sun extends Fragment {
 
     public static Sun newInstance() {
         Sun fragment = new Sun();
-
-        Bundle args = new Bundle();
-//        args.putDouble(ARG_LONGITUDE, longitude);
-        fragment.setArguments(args);
-
         return fragment;
     }
 
-    Thread thread = new Thread(new Runnable() {
-        @Override
-        public void run() {
-            while(!STOP_THREAD) {
-                try {
-                    Thread.sleep(MainActivity.getDelayInMS());
-                } catch (InterruptedException e) {
-                    Log.e("SUN THREAD TROLL", e.getMessage());
-                }
-            }
-        }
-    });
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-        }
-    }
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        // zapisz stare dane...
-//        outState.putString(ARG_TV_SUN_RISE, tvSunRise.getText().toString());
-//        outState.putString(ARG_TV_SUN_RISE_AZIMUTH, tvSunRiseAzimuth.getText().toString());
-//        outState.putString(ARG_TV_SUN_SET, tvSunSet.getText().toString());
-//        outState.putString(ARG_TV_SUN_SET_AZIMUTH, tvSunSetAzimuth.getText().toString());
-//        outState.putString(ARG_TV_SUN_TWILIGHT, tvSunTwilight.getText().toString());
-//        outState.putString(ARG_TV_SUN_CIVIL_DAWN, tvSunCivilDawn.getText().toString());
-//        outState.putLong(ARG_DELAY, delay);
-//        outState.putSerializable(ARG_ASTRONOMY, astronomy);
     }
 
     @Override
@@ -91,21 +57,12 @@ public class Sun extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_sun, container, false);
-
         return v;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        thread.start();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        STOP_THREAD = true;
     }
 
 //    SETTERS

@@ -32,6 +32,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String SUNRISE = "SUNRISE";
     public static final String SUNSET = "SUNSET";
     public static final String TIMEZONE = "TIMEZONE";
+    public static final String DESCRIPTION = "DESCRIPTION";
 
     //     Database Information
     private static final String DB_NAME = "WEATHER.DB";
@@ -57,6 +58,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     + DEG + " " + "INTEGER,"
                     + SUNRISE + " " + "INTEGER,"
                     + SUNSET + " " + "INTEGER,"
+                    + DESCRIPTION + " " + "INTEGER,"
                     + TIMEZONE + " " + "INTEGER" + ");";
 
     //    This takes the Context (e.g., an Activity)

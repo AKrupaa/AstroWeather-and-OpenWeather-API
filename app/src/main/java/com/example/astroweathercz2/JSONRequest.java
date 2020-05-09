@@ -62,10 +62,10 @@ public class JSONRequest {
     public void jsonParse(JSONObject response, final VolleyParseCallback parseCallback) {
         try {
             // sprawdzasz czy warto
-            if (response.getInt("cod") == 404) {
-                parseCallback.on404Result("Error: 404 Not Found");
-                return;
-            }
+//            if (response.getInt("cod") == 404) {
+//                parseCallback.on404Result("Error: 404 Not Found");
+//                return;
+//            }
 
             // WARTO!
             ContentValues contentValues = new ContentValues();
@@ -77,6 +77,11 @@ public class JSONRequest {
 
             contentValues.put(DatabaseHelper.LON, lon);
             contentValues.put(DatabaseHelper.LAT, lat);
+
+            JSONObject weather = response.getJSONArray("weather").getJSONObject(0);
+            String description = weather.getString("description");
+
+            contentValues.put(DatabaseHelper.DESCRIPTION, description);
 
             JSONObject main = response.getJSONObject("main");
             int temp = main.getInt("temp");
@@ -156,8 +161,6 @@ public class JSONRequest {
 
 
     public interface VolleyParseCallback {
-        void on404Result(String text);
-
         void onSuccessResult(ContentValues result);
     }
 }

@@ -9,9 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
@@ -52,26 +50,6 @@ public class MainActivity extends AppCompatActivity implements Options.IOptionsL
 
     private SharedViewModel sharedViewModel;
 
-
-    private Thread threadTime = new Thread() {
-        @Override
-        public void run() {
-            try {
-                while (!threadTime.isInterrupted() || !STOP_THREAD) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            setActualTime();
-                        }
-                    });
-                    Thread.sleep(1000);
-                }
-            } catch (InterruptedException e) {
-                Log.e("Problem z watkiem", "Problem z watkiem od czasu/daty");
-            }
-        }
-    };
-
     static public long getDelayInMS() {
         return delayInMS;
     }
@@ -83,74 +61,39 @@ public class MainActivity extends AppCompatActivity implements Options.IOptionsL
         setTextViews();
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
-        threadTime.start();
-
         viewPager2 = findViewById(R.id.view_pager);
         viewPagerFragmentAdapter = new ViewPagerFragmentAdapter(getSupportFragmentManager(), getLifecycle());
-        viewPagerFragmentAdapter.addFragment(Options.newInstance());
 
-        // i basta.
-        if (savedInstanceState != null) {
-            confirmOptionClicked = savedInstanceState.getBoolean(ARG_CONFIRM_OPTION_CLICKED);
-            delayInMS = savedInstanceState.getLong(ARG_DELAY_IN_MS);
 
-            if (confirmOptionClicked) {
-                latitude = savedInstanceState.getDouble(ARG_LATITUDE);
-                longtitude = savedInstanceState.getDouble(ARG_LONGTITUDE);
-                // ustaw szerokosc i dlugosc geo.
-                tvActualLocalization.setText(String.format("Latitude %s Longtitude %s", latitude, longtitude));
-            }
+        if (isTablet(getApplicationContext()) && confirmOptionClicked) {
 
-//            astronomy = (Astronomy) savedInstanceState.getSerializable(ARG_ASTRONOMY);
-            if (isTablet(getApplicationContext()) && confirmOptionClicked) {
-                viewPagerFragmentAdapter.addFragment(Result.newInstance(longtitude, latitude));
-            }
-            if (!isTablet(getApplicationContext()) && confirmOptionClicked) {
-                viewPagerFragmentAdapter.addFragment(Moon.newInstance());
-                viewPagerFragmentAdapter.addFragment(Sun.newInstance());
-            }
+        }
+
+        if (!isTablet(getApplicationContext()) && confirmOptionClicked) {
+
         }
 
         viewPager2.setAdapter(viewPagerFragmentAdapter);
+        viewPagerFragmentAdapter.addFragment(Options.newInstance());
         sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        outState.putBoolean(ARG_CONFIRM_OPTION_CLICKED, confirmOptionClicked);
-        outState.putLong(ARG_DELAY_IN_MS, delayInMS);
-
-        try {
-            outState.putDouble(ARG_LATITUDE, latitude);
-            outState.putDouble(ARG_LONGTITUDE, longtitude);
-        } catch (Exception ex) {
-            Log.i("Oszustwo", "Mnie nie oszukasz, i tyle w temacie");
-        }
     }
 
     @Override
     public void onConfirmOptions(String sLongitude, String sLatitude, String delayTime, final String nameOfCity) {
 
-        delayInMS = Long.parseLong(delayTime.replaceAll(" ", "")) * 1000 * 60;
+//        delayInMS = Long.parseLong(delayTime.replaceAll(" ", "")) * 1000 * 60;
 
-//        TODO: Obsługa miast/lon/lat
-
-        if (nameOfCity != null)
-            tvActualLocalization.setText(nameOfCity);
-
-        if (sLongitude != null && sLatitude != null) {
-            longtitude = Double.valueOf(sLongitude);
-            latitude = Double.valueOf(sLatitude);
-            // ustaw długość i szerokośc geograficzną
-            tvActualLocalization.setText(String.format("Latitude %s Longtitude %s", latitude, longtitude));
-        }
+////        TODO: Obsługa miast/lon/lat
+//
+//        if (nameOfCity != null)
+//            tvActualLocalization.setText(nameOfCity);
+//
+//        if (sLongitude != null && sLatitude != null) {
+//            longtitude = Double.valueOf(sLongitude);
+//            latitude = Double.valueOf(sLatitude);
+//            // ustaw długość i szerokośc geograficzną
+//            tvActualLocalization.setText(String.format("Latitude %s Longtitude %s", latitude, longtitude));
+//        }
 
         // blokuje ekran progress barem
         viewPager2.setVisibility(View.INVISIBLE);
@@ -158,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements Options.IOptionsL
 
         // otworz baze danych
 //        final DBManager dbManager = new DBManager(this);
-        if(dbManager == null) {
+        if (dbManager == null) {
             dbManager = new DBManager(this);
             dbManager.open();
         }
@@ -184,26 +127,8 @@ public class MainActivity extends AppCompatActivity implements Options.IOptionsL
                 @Override
                 public void onSuccessResponse(JSONObject response) {
                     Log.e("INTERNET", "Zebrano dane z Internetu");
-
-                    // powiodło się pobranie z interentu
-//                    Toast.makeText(getApplicationContext(), "Woah, masz szybkie łączę internetowe!", Toast.LENGTH_SHORT).show();
-
                     // wez to teraz przetlumacz na dane, na których będziesz pracować
                     jsonRequest.jsonParse(response, new JSONRequest.VolleyParseCallback() {
-                        @Override
-                        public void on404Result(String errorMessage) {
-                            Log.e("INTERNET", "ERROR 404 <on404Result>");
-                            // coś gościu źle wprowadził
-                            // wypisz mu blad
-                            Log.e("ERROR 404 HTML", errorMessage);
-                            Log.e("ERROR 404 HTML", "Wrong data in EditTexts, try again");
-                            Toast.makeText(getApplicationContext(), "There is not city like those, try again", Toast.LENGTH_LONG).show();
-
-                            // zwolniam ekran wczytywania
-                            viewPager2.setVisibility(View.VISIBLE);
-                            progressBar.setVisibility(View.GONE);
-                        }
-
                         @Override
                         public void onSuccessResult(ContentValues result) {
                             Log.e("INTERNET", "Parsowanie JSONA powiodlo sie!");
@@ -225,15 +150,16 @@ public class MainActivity extends AppCompatActivity implements Options.IOptionsL
                                 Log.e("INTERNET", "Miasto nie istnieje w bazie danych!");
                                 Log.e("FOUND NO row ", e.getMessage());
                                 long rowID = dbManager.insert(result);
-                                Log.e("INTERNET", "Wprowadzono nowe miasto " + nameOfCity +  "; jego ID " + rowID + "; do bazy danych!");
+                                Log.e("INTERNET", "Wprowadzono nowe miasto " + nameOfCity + "; jego ID " + rowID + "; do bazy danych!");
                                 // wrzuc do SharedViewModel (Container)
-                                //TODO: wrzuc dane do SharedViewModel
                                 sharedViewModel.setSharedData(result);
                             }
 
                             Log.e("INTERNET", "Tworze fragmenty!");
-                            viewPagerFragmentAdapter.createFragment(1);
-                            viewPagerFragmentAdapter.createFragment(2);
+                            viewPagerFragmentAdapter.addFragment(Information.newInstance());
+                            viewPagerFragmentAdapter.addFragment(Moon.newInstance());
+                            viewPagerFragmentAdapter.addFragment(Sun.newInstance());
+                            viewPagerFragmentAdapter.notifyDataSetChanged();
                             Log.e("INTERNET", "Fragmenty utworzone!");
                             // zwolniam ekran wczytywania
                             Log.e("INTERNET", "Zmiana ekranu...");
@@ -275,8 +201,10 @@ public class MainActivity extends AppCompatActivity implements Options.IOptionsL
                 Log.e("NO INTERNET", "Zamiana danych na typ ContentValues");
                 sharedViewModel.setSharedData(contentValues);
                 Log.e("NO INTERNET", "Proba utworzenia fragmentow");
-                viewPagerFragmentAdapter.createFragment(1);
-                viewPagerFragmentAdapter.createFragment(2);
+                viewPagerFragmentAdapter.addFragment(Information.newInstance());
+                viewPagerFragmentAdapter.addFragment(Moon.newInstance());
+                viewPagerFragmentAdapter.addFragment(Sun.newInstance());
+                viewPagerFragmentAdapter.notifyDataSetChanged();
                 Log.e("NO INTERNET", "Fragmenty utworzone");
                 // zwolniam ekran wczytywania
                 viewPager2.setVisibility(View.VISIBLE);
@@ -287,7 +215,7 @@ public class MainActivity extends AppCompatActivity implements Options.IOptionsL
                 Log.e("NO INTERNET EX", "Nie znaleziono ID <padla logika>");
             }
         }
-
+        viewPagerFragmentAdapter.notifyDataSetChanged();
     }
 
     private void setActualTime() {

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class ViewPagerFragmentAdapter extends FragmentStateAdapter {
 
-    private static final int MAX_LENGHT_OF_FRAGMENTS = 3;
+    public static final int MAX_LENGHT_OF_FRAGMENTS = 3;
     private ArrayList<Fragment> arrayList = new ArrayList<>();
 
 
@@ -30,23 +30,11 @@ public class ViewPagerFragmentAdapter extends FragmentStateAdapter {
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-
-//        return arrayList.get(position);
-        switch (position) {
-            case 0:
-                return Options.newInstance();
-            case 1:
-                return Moon.newInstance();
-            case 2:
-                return Sun.newInstance();
-        }
-        return null;
+        return arrayList.get(position);
     }
 
     @Override
     public int getItemCount() {
-
-        return MAX_LENGHT_OF_FRAGMENTS;
-//        return arrayList.size();
+        return arrayList.size();
     }
 }
