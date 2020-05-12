@@ -57,116 +57,102 @@
 
         <TextView
             android:id="@+id/name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:hint="@string/nameOfCity"
-            android:textColor="@color/colorWhite"
+            style="@style/MyTextViewStyle"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.3" />
+            app:layout_constraintVertical_bias="0.18" />
 
         <TextView
             android:id="@+id/lonlat"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:hint="Wspolrzedne geograficzne: "
-            android:textColor="@color/colorWhite"
+            style="@style/MyTextViewStyle"
+            app:layout_constraintBottom_toTopOf="@id/tvTime"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/name" />
-
 
         <TextView
             android:id="@+id/tvTime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:hint="czas"
-            android:textColor="@color/colorWhite"
+            style="@style/MyTextViewStyle"
+            app:layout_constraintBottom_toTopOf="@id/temperature"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/lonlat" />
 
 
         <TextView
             android:id="@+id/temperature"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:hint="temperatura"
-            android:textColor="@color/colorWhite"
+            style="@style/MyTextViewStyle"
+            app:layout_constraintBottom_toTopOf="@id/feelslike"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvTime" />
 
         <TextView
             android:id="@+id/feelslike"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:hint="temperatura"
+            style="@style/MyTextViewStyle"
             android:textColor="@color/colorWhite"
+            app:layout_constraintBottom_toTopOf="@id/tempmin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/temperature" />
 
         <TextView
             android:id="@+id/tempmin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:hint="temperatura"
+            style="@style/MyTextViewStyle"
             android:textColor="@color/colorWhite"
+            app:layout_constraintBottom_toTopOf="@id/tempmax"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/feelslike" />
 
         <TextView
             android:id="@+id/tempmax"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:hint="temperatura"
+            style="@style/MyTextViewStyle"
             android:textColor="@color/colorWhite"
+            app:layout_constraintBottom_toTopOf="@id/pressure"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tempmin" />
 
         <TextView
             android:id="@+id/pressure"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:hint="cisnienie"
-            android:textColor="@color/colorWhite"
+            style="@style/MyTextViewStyle"
+            app:layout_constraintBottom_toTopOf="@id/description"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tempmax" />
 
         <TextView
             android:id="@+id/description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:hint="opis"
-            android:textColor="@color/colorWhite"
+            style="@style/MyTextViewStyle"
+            app:layout_constraintBottom_toTopOf="@id/windspeed"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/pressure" />
 
         <TextView
             android:id="@+id/windspeed"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:hint="opis"
-            android:textColor="@color/colorWhite"
+            style="@style/MyTextViewStyle"
+            app:layout_constraintBottom_toTopOf="@id/sunrise"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/description" />
 
         <TextView
             android:id="@+id/sunrise"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:hint="opis"
-            android:textColor="@color/colorWhite"
+            style="@style/MyTextViewStyle"
+            app:layout_constraintBottom_toTopOf="@id/sunset"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/windspeed" />
 
         <TextView
             android:id="@+id/sunset"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:hint="opis"
-            android:textColor="@color/colorWhite"
+            style="@style/MyTextViewStyle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/sunrise" />
 
 

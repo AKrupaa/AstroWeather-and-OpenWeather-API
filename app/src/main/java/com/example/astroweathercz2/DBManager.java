@@ -47,7 +47,7 @@ public class DBManager {
      */
     public long insert(String name, /*String dateInsert,*/ int lon, int lat, int temp, int feelsLike,
                        int tempMin, int tempMax, int pressure, int humidity, int speed, String desc, /*int deg,*/
-                       int sunrise, int sunset, int timezone) {
+                       int sunrise, int sunset, int timezone, int time) {
 //        Content Values creates an empty set of values using the given initial size
 //        This class is used to store a set of values
 
@@ -71,6 +71,7 @@ public class DBManager {
         contentValues.put(DatabaseHelper.SUNRISE, sunrise);
         contentValues.put(DatabaseHelper.SUNSET, sunset);
         contentValues.put(DatabaseHelper.TIMEZONE, timezone);
+        contentValues.put(DatabaseHelper.TIME, time);
 
         // Insert the new row, returning the primary key value of the new row
         long newRowId = database.insert(DatabaseHelper.TABLE_NAME, null, contentValues);
@@ -104,7 +105,8 @@ public class DBManager {
 //                DatabaseHelper.DEG,
                 DatabaseHelper.SUNRISE,
                 DatabaseHelper.SUNSET,
-                DatabaseHelper.TIMEZONE
+                DatabaseHelper.TIMEZONE,
+                DatabaseHelper.TIME
         };
 
         // How you want the results sorted in the resulting Cursor
@@ -181,7 +183,7 @@ public class DBManager {
     //    Updating Record in Android SQLite database table
     public int update(long _id, String name, /*String dateInsert,*/ int lon, int lat, int temp, int feelsLike,
                       int tempMin, int tempMax, int pressure, int humidity, int speed, String desc,
-            /*int deg,*/ int sunrise, int sunset, int timezone) {
+            /*int deg,*/ int sunrise, int sunset, int timezone, int time) {
 //        Content Values creates an empty set of values using the given initial size
 //        This class is used to store a set of values
         ContentValues contentValues = new ContentValues();
@@ -205,6 +207,7 @@ public class DBManager {
         contentValues.put(DatabaseHelper.SUNRISE, sunrise);
         contentValues.put(DatabaseHelper.SUNSET, sunset);
         contentValues.put(DatabaseHelper.TIMEZONE, timezone);
+        contentValues.put(DatabaseHelper.TIME, time);
 
         int i = database.update(DatabaseHelper.TABLE_NAME, contentValues, DatabaseHelper._ID + " = " + _id, null);
         return i;

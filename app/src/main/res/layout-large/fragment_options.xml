@@ -1,153 +1,188 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    tools:context=".Options"
     android:background="@color/colorBlack"
-    tools:context=".Options">
+    >
 
-
-    <!-- TODO: Update blank fragment layout -->
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <TextView
+        android:id="@+id/textViewName"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="50dp"
+        android:gravity="center"
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
+        android:maxLines="1"
+        android:text="@string/nameOfCity"
 
-            android:gravity="center"
-            android:maxLines="1"
-            android:text="@string/longitude"
+        android:textColor="@color/colorWhite"
+        app:autoSizeMaxTextSize="@dimen/autoSizeMaxTextSize"
+        app:autoSizeMinTextSize="@dimen/autoSizeMinTextSize"
+        app:autoSizeStepGranularity="@dimen/autoSizeStepGranularity"
+        app:autoSizeTextType="uniform"
 
-            android:textColor="@color/colorWhite"
-            app:autoSizeMaxTextSize="@dimen/autoSizeMaxTextSize"
-            app:autoSizeMinTextSize="@dimen/autoSizeMinTextSize"
-            app:autoSizeStepGranularity="@dimen/autoSizeStepGranularity"
-            app:autoSizeTextType="uniform"
-
-            app:layout_constraintBottom_toTopOf="@+id/inputedLongitude"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <EditText
-            android:id="@+id/inputedLongitude"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:hint="@string/hintlongitude"
-            android:inputType="number"
-            android:textColor="@color/colorOrange"
-            android:textColorHint="@color/colorOrange"
-
-            android:textSize="30sp"
-
-            app:autoSizeMaxTextSize="@dimen/autoSizeMaxTextSize"
-            app:autoSizeMinTextSize="@dimen/autoSizeMinTextSize"
-            app:autoSizeStepGranularity="@dimen/autoSizeStepGranularity"
-            app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.22000003" />
 
 
-            app:layout_constraintBottom_toTopOf="@+id/textView3"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textView" />
+    <EditText
+        android:id="@+id/nameOfCity"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:hint="@string/hintCity"
+        android:inputType="text"
+        android:textColor="@color/colorOrange"
+        android:textColorHint="@color/colorOrange"
 
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
+        app:autoSizeMaxTextSize="@dimen/autoSizeMaxTextSize"
+        app:autoSizeMinTextSize="@dimen/autoSizeMinTextSize"
+        app:autoSizeStepGranularity="@dimen/autoSizeStepGranularity"
+        app:autoSizeTextType="uniform"
 
-            android:gravity="center"
-            android:maxLines="1"
-            android:text="@string/latitude"
-            android:textColor="@color/colorWhite"
+        app:layout_constraintTop_toBottomOf="@id/textViewName"
+        />
 
-            app:autoSizeMaxTextSize="@dimen/autoSizeMaxTextSize"
-            app:autoSizeMinTextSize="@dimen/autoSizeMinTextSize"
-            app:autoSizeStepGranularity="@dimen/autoSizeStepGranularity"
-            app:autoSizeTextType="uniform"
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
 
-            app:layout_constraintBottom_toTopOf="@+id/inputedLatitude"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/inputedLongitude" />
+        android:gravity="center"
+        android:maxLines="1"
+        android:text="@string/longitude"
 
-        <EditText
-            android:id="@+id/inputedLatitude"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:hint="@string/hintLatitude"
-            android:inputType="number"
-            android:textColor="@color/colorOrange"
-            android:textColorHint="@color/colorOrange"
+        android:textColor="@color/colorWhite"
+        app:autoSizeMaxTextSize="@dimen/autoSizeMaxTextSize"
+        app:autoSizeMinTextSize="@dimen/autoSizeMinTextSize"
+        app:autoSizeStepGranularity="@dimen/autoSizeStepGranularity"
 
-            android:textSize="30sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/nameOfCity"
+        app:layout_constraintVertical_bias="0.0" />
 
-            app:autoSizeMaxTextSize="@dimen/autoSizeMaxTextSize"
-            app:autoSizeMinTextSize="@dimen/autoSizeMinTextSize"
-            app:autoSizeStepGranularity="@dimen/autoSizeStepGranularity"
-            app:autoSizeTextType="uniform"
+    <EditText
+        android:id="@+id/inputedLongitude"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:hint="@string/hintlongitude"
+        android:inputType="number"
+        android:textColor="@color/colorOrange"
+        android:textColorHint="@color/colorOrange"
 
-            app:layout_constraintBottom_toTopOf="@id/textView2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        app:autoSizeMaxTextSize="@dimen/autoSizeMaxTextSize"
+        app:autoSizeMinTextSize="@dimen/autoSizeMinTextSize"
+        app:autoSizeStepGranularity="@dimen/autoSizeStepGranularity"
+        app:autoSizeTextType="uniform"
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
-            android:gravity="center"
-            android:maxLines="1"
-            android:text="@string/timeBetweenCalculations"
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
 
-            android:textColor="@color/colorWhite"
-            app:autoSizeMaxTextSize="@dimen/autoSizeMaxTextSize"
-            app:autoSizeMinTextSize="@dimen/autoSizeMinTextSize"
-            app:autoSizeStepGranularity="@dimen/autoSizeStepGranularity"
-            app:autoSizeTextType="uniform"
+        android:gravity="center"
+        android:maxLines="1"
+        android:text="@string/latitude"
+        android:textColor="@color/colorWhite"
 
-            app:layout_constraintBottom_toTopOf="@id/spinnerTime"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/inputedLatitude" />
+        app:autoSizeMaxTextSize="@dimen/autoSizeMaxTextSize"
+        app:autoSizeMinTextSize="@dimen/autoSizeMinTextSize"
+        app:autoSizeStepGranularity="@dimen/autoSizeStepGranularity"
+        app:autoSizeTextType="uniform"
 
-        <Spinner
-            android:id="@+id/spinnerTime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/spinnerTheme"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/inputedLongitude"
+        app:layout_constraintVertical_bias="0.0" />
 
-            app:layout_constraintBottom_toTopOf="@id/buttonConfirm"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView2" />
+    <EditText
+        android:id="@+id/inputedLatitude"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:hint="@string/hintLatitude"
+        android:inputType="number"
+        android:textColor="@color/colorOrange"
+        android:textColorHint="@color/colorOrange"
 
-        <Button
-            android:id="@+id/buttonConfirm"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginBottom="80dp"
-            android:background="@color/colorBlack"
+        app:autoSizeMaxTextSize="@dimen/autoSizeMaxTextSize"
+        app:autoSizeMinTextSize="@dimen/autoSizeMinTextSize"
+        app:autoSizeStepGranularity="@dimen/autoSizeStepGranularity"
+        app:autoSizeTextType="uniform"
 
-            android:text="@string/confirm"
-            android:textColor="@color/colorOrange"
-            app:autoSizeMaxTextSize="30sp"
-            app:autoSizeMinTextSize="@dimen/autoSizeMinTextSize"
-            app:autoSizeStepGranularity="@dimen/autoSizeStepGranularity"
-            app:autoSizeTextType="uniform"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spinnerTime" />
+<!--    <Button-->
+<!--        android:id="@+id/buttonConfirm"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="50dp"-->
+<!--        android:background="@color/colorBlack"-->
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+<!--        android:text="@string/confirm"-->
+<!--        android:textColor="@color/colorOrange"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.37"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/inputedLatitude"-->
+<!--        app:layout_constraintVertical_bias="0.050000012" />-->
 
-</FrameLayout>
+<!--    <Button-->
+<!--        android:id="@+id/buttonForce"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="50dp"-->
+<!--        android:layout_marginLeft="10dp"-->
+<!--        android:background="@color/colorBlack"-->
+<!--        android:text="Wymuś"-->
+<!--        android:textColor="@color/colorOrange"-->
+<!--        app:layout_constraintStart_toEndOf="@id/buttonConfirm"-->
+<!--        app:layout_constraintTop_toTopOf="@id/buttonConfirm" />-->
+
+    <Button
+        android:id="@+id/buttonConfirm"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:background="@color/colorBlack"
+
+        android:gravity="right"
+        android:paddingRight="20dp"
+        android:text="@string/confirm"
+        android:textColor="@color/colorOrange"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/buttonForce"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/inputedLatitude"
+        app:layout_constraintVertical_bias="0.050000012" />
+
+    <Button
+        android:id="@+id/buttonForce"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:background="@color/colorBlack"
+        android:paddingLeft="20dp"
+        android:gravity="left"
+        android:text="Wymuś"
+        android:textColor="@color/colorOrange"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/buttonConfirm"
+        app:layout_constraintTop_toTopOf="@id/buttonConfirm" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

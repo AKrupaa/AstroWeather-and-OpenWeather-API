@@ -81,12 +81,6 @@ public class JSONRequest {
 
     public void jsonParse(JSONObject response, final VolleyParseCallback parseCallback) {
         try {
-            // sprawdzasz czy warto
-//            if (response.getInt("cod") == 404) {
-//                parseCallback.on404Result("Error: 404 Not Found");
-//                return;
-//            }
-
             // WARTO!
             ContentValues contentValues = new ContentValues();
 
@@ -140,93 +134,8 @@ public class JSONRequest {
 
             contentValues.put(DatabaseHelper.TIMEZONE, timezone);
 
-            // You are asking for Lodz, yeah?
-            // Yeah
-            // Here you are: łódź
-            // Are you serious?
-
-            String name = response.getString("name");
-            name = name.toLowerCase();
-            String convertedString = name
-                    .replaceAll("ą", "a")
-                    .replaceAll("ę", "e")
-                    .replaceAll("ó", "o")
-                    .replaceAll("ś", "s")
-                    .replaceAll("ł", "l")
-                    .replaceAll("ż", "z")
-                    .replaceAll("ź", "z")
-                    .replaceAll("ć", "c")
-                    .replaceAll("ń", "n")
-                    .replaceAll(" ", "");
-            contentValues.put(DatabaseHelper.NAME, convertedString);
-
-            // actual date *new element
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String date = sdf.format(new Date());
-            contentValues.put(DatabaseHelper.DATE_OF_INSERT, date);
-
-            parseCallback.onSuccessResult(contentValues);
-
-        } catch (JSONException e) {
-            Log.e("JSONRequest Exception", e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    public void jsonParseLatLon(JSONObject response, final VolleyParseCallback parseCallback) {
-        try {
-            // WARTO!
-            ContentValues contentValues = new ContentValues();
-
-            JSONObject coord = response.getJSONObject("coord");
-
-            int lon = coord.getInt("lon");
-            int lat = coord.getInt("lat");
-
-            contentValues.put(DatabaseHelper.LON, lon);
-            contentValues.put(DatabaseHelper.LAT, lat);
-
-            JSONObject weather = response.getJSONArray("weather").getJSONObject(0);
-            String description = weather.getString("description");
-
-            contentValues.put(DatabaseHelper.DESCRIPTION, description);
-
-            JSONObject main = response.getJSONObject("main");
-            int temp = main.getInt("temp");
-            int feelsLike = main.getInt("feels_like");
-            int temp_min = main.getInt("temp_min");
-            int temp_max = main.getInt("temp_max");
-            int pressure = main.getInt("pressure");
-            int humidity = main.getInt("humidity");
-
-            contentValues.put(DatabaseHelper.TEMPERATURE, temp);
-            contentValues.put(DatabaseHelper.FEELS_LIKE, feelsLike);
-            contentValues.put(DatabaseHelper.TEMP_MIN, temp_min);
-            contentValues.put(DatabaseHelper.TEMP_MAX, temp_max);
-            contentValues.put(DatabaseHelper.PRESSURE, pressure);
-            contentValues.put(DatabaseHelper.HUMIDITY, humidity);
-
-            JSONObject wind = response.getJSONObject("wind");
-            int speed = wind.getInt("speed");
-
-            // OJ TAK 08-05-2020 - ZMIANA STRUKTURY DANYCH JSONA, OJ TAK ....................
-            // [*]
-            // "WCZORAJ DZIALALO!"
-//                    int deg = wind.getInt("deg");
-
-            contentValues.put(DatabaseHelper.SPEED, speed);
-//                    contentValues.put(DatabaseHelper.DEG, deg);
-
-            JSONObject sys = response.getJSONObject("sys");
-            int sunrise = sys.getInt("sunrise");
-            int sunset = sys.getInt("sunset");
-
-            contentValues.put(DatabaseHelper.SUNRISE, sunrise);
-            contentValues.put(DatabaseHelper.SUNSET, sunset);
-
-            int timezone = response.getInt("timezone");
-
-            contentValues.put(DatabaseHelper.TIMEZONE, timezone);
+            int time = response.getInt("dt");
+            contentValues.put(DatabaseHelper.TIME, time);
 
             // You are asking for Lodz, yeah?
             // Yeah

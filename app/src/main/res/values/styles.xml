@@ -13,4 +13,19 @@
         <item name="android:background">@color/colorBlack</item>
     </style>
 
+
+    <style name="MyTextViewStyle" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">45dp</item>
+        <item name="android:gravity">center</item>
+        <item name="maxLines">1</item>
+        <item name="color">@color/colorWhite</item>
+        <item name="autoSizeMinTextSize">@dimen/autoSizeMinTextSize</item>
+        <item name="autoSizeMaxTextSize">@dimen/autoSizeMaxTextSize</item>
+        <item name="autoSizeStepGranularity">@dimen/autoSizeStepGranularity</item>
+        <item name="autoSizeTextType">uniform</item>
+    </style>
+
 </resources>

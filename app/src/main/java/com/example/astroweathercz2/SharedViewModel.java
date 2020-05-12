@@ -11,6 +11,11 @@ public class SharedViewModel extends ViewModel {
 
     public SharedViewModel() { }
 
+    public void clearSharedData() {
+        sharedData = null;
+        sharedData = new MutableLiveData<ContentValues>();
+    }
+
     public void setSharedData(ContentValues contentValues){
         sharedData.setValue(contentValues);
     }

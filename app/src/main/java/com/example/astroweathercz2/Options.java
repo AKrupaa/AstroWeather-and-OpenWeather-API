@@ -18,12 +18,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Options extends Fragment {
-
+    //TODO: auto complete suggestions and database
     private IOptionsListener listener;
     private EditText inputedLongitude;
     private EditText inputedLatitude;
     private EditText inputedCity;
-    private Spinner spinner;
+//    private Spinner spinner;
 
     public Options() {
         // Required empty public constructor
@@ -47,30 +47,51 @@ public class Options extends Fragment {
         View v = inflater.inflate(R.layout.fragment_options, container, false);
 
         Button confirmButton = v.findViewById(R.id.buttonConfirm);
+        Button forceButton = v.findViewById(R.id.buttonForce);
         inputedLongitude = v.findViewById(R.id.inputedLongitude);
         inputedLatitude = v.findViewById(R.id.inputedLatitude);
-        spinner = v.findViewById(R.id.spinnerTime);
+//        spinner = v.findViewById(R.id.spinnerTime);
         inputedCity = v.findViewById(R.id.nameOfCity);
-        addItemsToTimeSpinner();
+//        addItemsToTimeSpinner();
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String readLong = inputedLongitude.getText().toString();
                 String readLati = inputedLatitude.getText().toString();
-                String readTime = String.valueOf(spinner.getSelectedItem()).substring(0, 2);
+//                String readTime = String.valueOf(spinner.getSelectedItem()).substring(0, 2);
                 String nameOfCity = inputedCity.getText().toString();
 
                 if (nameOfCity.length() > 1) {
                     nameOfCity = nameOfCity.toLowerCase().replaceAll(" ", "");
-                    listener.onConfirmOptions(null, null, readTime, nameOfCity);
+                    listener.onConfirmOptions(null, null, /*readTime,*/ nameOfCity,false);
                 } else if (readLong.length() > 0 && readLati.length() > 0)
-                    listener.onConfirmOptions(readLong, readLati, readTime, null);
+                    listener.onConfirmOptions(readLong, readLati, /*readTime,*/ null,false);
                 else
                     Toast.makeText(getContext(), "Wypełnij dane albo nic z tego!", Toast.LENGTH_SHORT).show();
 //                }
             }
         });
+
+        forceButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String readLong = inputedLongitude.getText().toString();
+                String readLati = inputedLatitude.getText().toString();
+//                String readTime = String.valueOf(spinner.getSelectedItem()).substring(0, 2);
+                String nameOfCity = inputedCity.getText().toString();
+
+                if (nameOfCity.length() > 1) {
+                    nameOfCity = nameOfCity.toLowerCase().replaceAll(" ", "");
+                    listener.onConfirmOptions(null, null, /*readTime,*/ nameOfCity, true);
+                } else if (readLong.length() > 0 && readLati.length() > 0)
+                    listener.onConfirmOptions(readLong, readLati, /*readTime,*/ null,true);
+                else
+                    Toast.makeText(getContext(), "Wypełnij dane albo nic z tego!", Toast.LENGTH_SHORT).show();
+//                }
+            }
+        });
+
 
         return v;
     }
@@ -92,23 +113,23 @@ public class Options extends Fragment {
         listener = null;
     }
 
-    private void addItemsToTimeSpinner() {
-        List<String> timeDelayList = new ArrayList<String>();
-        timeDelayList.add("1 minuta");
-        timeDelayList.add("2 minuty");
-        timeDelayList.add("5 minut");
-        timeDelayList.add("10 minut");
-        timeDelayList.add("30 minut");
-//        Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, timeDelayList);
-//        Specify the layout to use when the list of choices appears
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        Apply the adapter to the spinner
-        spinner.setAdapter(dataAdapter);
-    }
+//    private void addItemsToTimeSpinner() {
+//        List<String> timeDelayList = new ArrayList<String>();
+//        timeDelayList.add("1 minuta");
+//        timeDelayList.add("2 minuty");
+//        timeDelayList.add("5 minut");
+//        timeDelayList.add("10 minut");
+//        timeDelayList.add("30 minut");
+////        Create an ArrayAdapter using the string array and a default spinner layout
+//        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, timeDelayList);
+////        Specify the layout to use when the list of choices appears
+//        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+////        Apply the adapter to the spinner
+//        spinner.setAdapter(dataAdapter);
+//    }
 
     public interface IOptionsListener {
-        void onConfirmOptions(String sLongitude, String sLatitude, String delayTime, String nameOfCity);
+        void onConfirmOptions(String sLongitude, String sLatitude, /*String delayTime,*/ String nameOfCity, boolean force);
     }
 
 }

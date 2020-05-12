@@ -61,8 +61,8 @@ public class Information extends Fragment {
 
         name.setText(String.format("City: %s", contentValues.getAsString(DatabaseHelper.NAME)));
         lonlat.setText(String.format("Lon: %s Lat: %s", contentValues.getAsString(DatabaseHelper.LON), contentValues.getAsString(DatabaseHelper.LAT)));
-//        time.setText(String.format("Time: %s", contentValues.getAsString(DatabaseHelper.TIMEZONE)));
-        time.setText(String.format("Time: %s", new Date()));
+        //        time.setText(String.format("Time: %s", contentValues.getAsString(DatabaseHelper.TIMEZONE)));
+//        time.setText(String.format("Time: %s", new Date()));
         temperature.setText(String.format("Temperature: %s", contentValues.getAsString(DatabaseHelper.TEMPERATURE)));
         feelsLike.setText(String.format("Feels like: %s", contentValues.getAsString(DatabaseHelper.FEELS_LIKE)));
         tempMax.setText(String.format("Max temperature: %s", contentValues.getAsString(DatabaseHelper.TEMP_MAX)));
@@ -74,13 +74,19 @@ public class Information extends Fragment {
         long javaTimestamp = unixTimestamp * 1000L;
         Date date = new Date(javaTimestamp);
         String sunrise = new SimpleDateFormat("MM:dd hh:mm").format(date);
-        sunRise.setText(String.format("Sun rise: %s", sunrise));
+        sunRise.setText(String.format("Sun rise: %s UTC", sunrise));
 
-        unixTimestamp = contentValues.getAsLong(DatabaseHelper.SUNRISE);
+        unixTimestamp = contentValues.getAsLong(DatabaseHelper.SUNSET);
         javaTimestamp = unixTimestamp * 1000L;
         date = new Date(javaTimestamp);
         String sunset = new SimpleDateFormat("MM:dd hh:mm").format(date);
-        sunSet.setText(String.format("Sun set: %s", sunset));
+        sunSet.setText(String.format("Sun set: %s UTC", sunset));
+
+        unixTimestamp = contentValues.getAsLong(DatabaseHelper.TIME);
+        javaTimestamp = unixTimestamp * 1000L;
+        date = new Date(javaTimestamp);
+        String fetchedTime = new SimpleDateFormat("MM:dd hh:mm").format(date);
+        time.setText(String.format("Time: %s UTC", fetchedTime));
     }
 
     private void initialization(View v) {
