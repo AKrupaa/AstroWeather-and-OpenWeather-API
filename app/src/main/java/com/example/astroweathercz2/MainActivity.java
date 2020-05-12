@@ -18,10 +18,6 @@ import com.android.volley.VolleyError;
 
 import org.json.JSONObject;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
 public class MainActivity extends AppCompatActivity implements Options.IOptionsListener {
 
     private static final String ARG_IS_TABLET = "ARG_IS_TABLET";
@@ -42,17 +38,11 @@ public class MainActivity extends AppCompatActivity implements Options.IOptionsL
     private TextView tvActualTime;
     private TextView tvActualLocalization;
     private ProgressBar progressBar;
-    private Double longtitude;
-    private Double latitude;
     private boolean confirmOptionClicked = false;
     private boolean STOP_THREAD = false;
     private DBManager dbManager;
 
     private SharedViewModel sharedViewModel;
-
-    static public long getDelayInMS() {
-        return delayInMS;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,8 +75,11 @@ public class MainActivity extends AppCompatActivity implements Options.IOptionsL
 
 ////        TODO: Obsługa miast/lon/lat
 //
-//        if (nameOfCity != null)
-//            tvActualLocalization.setText(nameOfCity);
+        if (nameOfCity != null)
+            nameActivation(nameOfCity);
+        else if (sLongitude != null && sLatitude != null) {
+            lonlatActivation(sLongitude, sLatitude);
+        }
 //
 //        if (sLongitude != null && sLatitude != null) {
 //            longtitude = Double.valueOf(sLongitude);
@@ -95,6 +88,31 @@ public class MainActivity extends AppCompatActivity implements Options.IOptionsL
 //            tvActualLocalization.setText(String.format("Latitude %s Longtitude %s", latitude, longtitude));
 //        }
 
+
+    }
+
+    void setTextViews() {
+        tvActualTime = findViewById(R.id.textViewActualTime);
+        tvActualLocalization = findViewById(R.id.textViewActualLocalization);
+    }
+
+    private boolean isTablet(Context context) {
+        return (context.getResources().getConfiguration().screenLayout
+                & Configuration.SCREENLAYOUT_SIZE_MASK)
+                >= Configuration.SCREENLAYOUT_SIZE_LARGE;
+    }
+
+    // getters / setters
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        STOP_THREAD = true;
+        dbManager.close();
+        Log.e("ON DESTROY", "Zamknieto baze danych, wylaczono program");
+    }
+
+    private void nameActivation(final String nameOfCity) {
         // blokuje ekran progress barem
         viewPager2.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.VISIBLE);
@@ -218,30 +236,30 @@ public class MainActivity extends AppCompatActivity implements Options.IOptionsL
         viewPagerFragmentAdapter.notifyDataSetChanged();
     }
 
-    private void setActualTime() {
-        DateFormat df = new SimpleDateFormat("HH:mm:ss"); // Format time
-        String time = df.format(Calendar.getInstance().getTime());
-        tvActualTime.setText(String.format("%s ", time));
-    }
 
-    void setTextViews() {
-        tvActualTime = findViewById(R.id.textViewActualTime);
-        tvActualLocalization = findViewById(R.id.textViewActualLocalization);
-    }
+    private void lonlatActivation(String lat, String lon) {
+        // blokuje ekran progress barem
+        Log.e("BLOCKING VIEW", "Blokowanie widoku");
+        viewPager2.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
 
-    private boolean isTablet(Context context) {
-        return (context.getResources().getConfiguration().screenLayout
-                & Configuration.SCREENLAYOUT_SIZE_MASK)
-                >= Configuration.SCREENLAYOUT_SIZE_LARGE;
-    }
 
-    // getters / setters
+        Log.e("CHECKING", "Pobieranie z Internetu?: true");
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        STOP_THREAD = true;
-        dbManager.close();
-        Log.e("ON DESTROY", "Zamknieto baze danych, wylaczono program");
+        Log.e("INTERNET", "Pobieranie danych z Internetu...");
+        // pobieraj z Internetu!
+        final JSONRequest jsonRequest = new JSONRequest(this);
+        jsonRequest.onResponseLatLon(lat, lon, new JSONRequest.VolleyRequestCallback() {
+            @Override
+            public void onSuccessResponse(JSONObject response) {
+                Log.e("INTERNET", "Zebrano dane z Internetu");
+                // wez to teraz przetlumacz na dane, na których będziesz pracować
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
     }
 }
